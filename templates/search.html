@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-container">
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="{{ url_for('index') }}">InstaClone</a>
+            </div>
+            
+            <div class="nav-search">
+                <form method="GET" action="{{ url_for('search') }}" class="search-form">
+                    <input type="text" name="q" placeholder="Search" value="{{ query }}">
+                    <button type="submit"><i class="far fa-search"></i></button>
+                </form>
+            </div>
+            
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}"><i class="fas fa-home"></i></a>
+                <a href="{{ url_for('explore') }}"><i class="far fa-compass"></i></a>
+                <a href="{{ url_for('search') }}"><i class="far fa-search"></i></a>
+                <a href="{{ url_for('profile', username=user.username) }}">
+                    <img src="{{ url_for('static', filename='images/' + user.profile_pic) }}" alt="Profile" class="nav-profile-pic">
+                </a>
+                <a href="{{ url_for('settings') }}"><i class="far fa-cog"></i></a>
+                <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="search-container">
+        <h2>Search Results for "{{ query }}"</h2>
+        
+        {% if users %}
+        <div class="search-results">
+            {% for result_user in users %}
+            <div class="search-result">
+                <img src="{{ url_for('static', filename='images/' + result_user.profile_pic) }}" alt="{{ result_user.username }}">
+                <div class="result-info">
+                    <a href="{{ url_for('profile', username=result_user.username) }}">{{ result_user.username }}</a>
+                    <span>{{ result_user.full_name }}</span>
+                </div>
+                {% if result_user.id != user.id %}
+                <button class="follow-btn" data-user-id="{{ result_user.id }}">Follow</button>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% elif query %}
+        <div class="no-results">
+            <p>No users found for "{{ query }}"</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

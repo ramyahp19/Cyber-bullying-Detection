@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-container">
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="{{ url_for('index') }}">InstaClone</a>
+            </div>
+            
+            <div class="nav-search">
+                <input type="text" placeholder="Search" id="search-input">
+            </div>
+            
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}"><i class="fas fa-home"></i></a>
+                <a href="{{ url_for('explore') }}"><i class="far fa-compass"></i></a>
+                <a href="{{ url_for('search') }}"><i class="far fa-search"></i></a>
+                <a href="{{ url_for('profile', username=user.username) }}">
+                    <img src="{{ url_for('static', filename='images/' + user.profile_pic) }}" alt="Profile" class="nav-profile-pic">
+                </a>
+                <a href="{{ url_for('settings') }}"><i class="far fa-cog"></i></a>
+                <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="post-detail-container">
+        <div class="post-detail">
+            <div class="post-image-large">
+                <img src="{{ url_for('static', filename='images/' + post.image) }}" alt="Post image">
+            </div>
+            
+            <div class="post-detail-sidebar">
+                <div class="post-detail-header">
+                    <div class="post-user">
+                        <img src="{{ url_for('static', filename='images/' + post.author.profile_pic) }}" alt="{{ post.author.username }}">
+                        <a href="{{ url_for('profile', username=post.author.username) }}">{{ post.author.username }}</a>
+                    </div>
+                    <div class="post-options">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                </div>
+                
+                <div class="post-detail-comments">
+                    <div class="post-caption">
+                        <a href="{{ url_for('profile', username=post.author.username) }}">{{ post.author.username }}</a>
+                        <span>{{ post.caption }}</span>
+                    </div>
+                    
+                    {% for comment in post.comments %}
+                    <div class="comment {% if comment.bullying_score > 0.4 %}bullying-detected{% endif %}">
+                        <a href="{{ url_for('profile', username=comment.author.username) }}">{{ comment.author.username }}</a>
+                        <span>{{ comment.text }}</span>
+                        {% if comment.bullying_score > 0.4 %}
+                        <span class="bullying-warning">⚠️ Cyberbullying detected</span>
+                        {% endif %}
+                        <span class="comment-time">{{ comment.created_at.strftime('%b %d') }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="post-detail-actions">
+                    <div class="post-actions">
+                        <button class="like-btn {% if post.likes|selectattr('user_id', 'equalto', user.id)|list %}liked{% endif %}" 
+                                data-post-id="{{ post.id }}">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <button class="comment-btn">
+                            <i class="far fa-comment"></i>
+                        </button>
+                        <button class="share-btn">
+                            <i class="far fa-paper-plane"></i>
+                        </button>
+                        <button class="save-btn">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="post-likes">
+                        <span class="like-count">{{ post.likes|length }} likes</span>
+                    </div>
+                    
+                    <div class="post-time">
+                        {{ post.created_at.strftime('%B %d, %Y') }}
+                    </div>
+                </div>
+                
+                <div class="add-comment-detail">
+                    <form class="comment-form" data-post-id="{{ post.id }}">
+                        <input type="text" placeholder="Add a comment..." class="comment-input">
+                        <button type="submit" class="comment-submit">Post</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.post-detail-container {
+    max-width: 935px;
+    margin: 84px auto 0;
+    padding: 20px;
+}
+
+.post-detail {
+    display: flex;
+    background: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+}
+
+.post-image-large {
+    flex: 1;
+    min-height: 500px;
+}
+
+.post-image-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.post-detail-sidebar {
+    flex: 1;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.post-detail-header {
+    padding: 15px;
+    border-bottom: 1px solid #dbdbdb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-detail-comments {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.post-detail-actions {
+    padding: 15px;
+    border-top: 1px solid #dbdbdb;
+}
+
+.add-comment-detail {
+    padding: 15px;
+    border-top: 1px solid #dbdbdb;
+}
+
+.comment-time {
+    color: #8e8e8e;
+    font-size: 12px;
+    margin-left: 10px;
+}
+</style>
+{% endblock %}

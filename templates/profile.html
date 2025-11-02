@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-container">
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="{{ url_for('index') }}">InstaClone</a>
+            </div>
+            
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}"><i class="fas fa-home"></i></a>
+                <a href="{{ url_for('explore') }}"><i class="far fa-compass"></i></a>
+                <a href="{{ url_for('search') }}"><i class="far fa-search"></i></a>
+                <a href="{{ url_for('profile', username=user.username) }}">
+                    <img src="{{ url_for('static', filename='images/' + user.profile_pic) }}" alt="Profile" class="nav-profile-pic">
+                </a>
+                <a href="{{ url_for('settings') }}"><i class="far fa-cog"></i></a>
+                <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-picture">
+                <img src="{{ url_for('static', filename='images/' + profile_user.profile_pic) }}" alt="{{ profile_user.username }}">
+            </div>
+            
+            <div class="profile-info">
+                <div class="profile-username">
+                    <h2>{{ profile_user.username }}</h2>
+                    {% if profile_user.id != user.id %}
+                    <button class="follow-btn {% if is_following %}following{% endif %}" 
+                            data-user-id="{{ profile_user.id }}">
+                        {% if is_following %}Following{% else %}Follow{% endif %}
+                    </button>
+                    {% else %}
+                    <a href="{{ url_for('settings') }}" class="edit-profile">Edit Profile</a>
+                    {% endif %}
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="stat">
+                        <span class="count">{{ posts|length }}</span>
+                        <span class="label">posts</span>
+                    </div>
+                    <div class="stat">
+                        <span class="count">{{ profile_user.followers.count() }}</span>
+                        <span class="label">followers</span>
+                    </div>
+                    <div class="stat">
+                        <span class="count">{{ profile_user.following.count() }}</span>
+                        <span class="label">following</span>
+                    </div>
+                </div>
+                
+                <div class="profile-bio">
+                    <h3>{{ profile_user.full_name }}</h3>
+                    <p>{{ profile_user.bio }}</p>
+                    <div class="reputation-score">
+                        Reputation Score: <span class="score {% if profile_user.reputation_score < 5 %}low{% endif %}">
+                            {{ profile_user.reputation_score }}/10
+                        </span>
+                        {% if profile_user.reputation_score < 5 %}
+                        <span class="restricted">(Account Restricted)</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="profile-posts">
+            {% if posts %}
+                <div class="posts-grid">
+                    {% for post in posts %}
+                    <div class="post-thumbnail">
+                        <a href="{{ url_for('index') }}#post-{{ post.id }}">
+                            <img src="{{ url_for('static', filename='images/' + post.image) }}" alt="Post">
+                            <div class="post-overlay">
+                                <span><i class="far fa-heart"></i> {{ post.likes|length }}</span>
+                                <span><i class="far fa-comment"></i> {{ post.comments|length }}</span>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-posts">
+                    <h3>No posts yet</h3>
+                    {% if profile_user.id == user.id %}
+                    <p>Share your first photo!</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

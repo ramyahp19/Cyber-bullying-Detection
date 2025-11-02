@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-content">
+        <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h1>{% block error_code %}{% endblock %}</h1>
+        <p>{% block error_message %}{% endblock %}</p>
+        <a href="{{ url_for('index') }}" class="home-btn">Go Home</a>
+    </div>
+</div>
+
+<style>
+.error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #fafafa;
+}
+
+.error-content {
+    text-align: center;
+    background: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    padding: 40px;
+    max-width: 400px;
+}
+
+.error-icon {
+    font-size: 64px;
+    color: #ed4956;
+    margin-bottom: 20px;
+}
+
+.error-content h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+    color: #262626;
+}
+
+.error-content p {
+    color: #8e8e8e;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.home-btn {
+    background: #0095f6;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+}
+</style>
+{% endblock %}

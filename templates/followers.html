@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-container">
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="{{ url_for('index') }}">InstaClone</a>
+            </div>
+            
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}"><i class="fas fa-home"></i></a>
+                <a href="{{ url_for('explore') }}"><i class="far fa-compass"></i></a>
+                <a href="{{ url_for('search') }}"><i class="far fa-search"></i></a>
+                <a href="{{ url_for('profile', username=user.username) }}">
+                    <img src="{{ url_for('static', filename='images/' + user.profile_pic) }}" alt="Profile" class="nav-profile-pic">
+                </a>
+                <a href="{{ url_for('settings') }}"><i class="far fa-cog"></i></a>
+                <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="follow-container">
+        <div class="follow-header">
+            <a href="{{ url_for('profile', username=profile_user.username) }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h2>{{ profile_user.username }}</h2>
+        </div>
+        
+        <div class="follow-tabs">
+            <a href="{{ url_for('followers', username=profile_user.username) }}" 
+               class="tab {% if request.endpoint == 'followers' %}active{% endif %}">
+                Followers
+            </a>
+            <a href="{{ url_for('following', username=profile_user.username) }}" 
+               class="tab {% if request.endpoint == 'following' %}active{% endif %}">
+                Following
+            </a>
+        </div>
+        
+        <div class="follow-list">
+            {% for follow_user in users %}
+            <div class="follow-item">
+                <div class="user-info">
+                    <img src="{{ url_for('static', filename='images/' + follow_user.profile_pic) }}" 
+                         alt="{{ follow_user.username }}">
+                    <div class="user-details">
+                        <a href="{{ url_for('profile', username=follow_user.username) }}">
+                            {{ follow_user.username }}
+                        </a>
+                        <span>{{ follow_user.full_name }}</span>
+                    </div>
+                </div>
+                
+                {% if follow_user.id != user.id %}
+                    {% if follow_user in user.following|map(attribute='followed') %}
+                    <button class="follow-btn following" data-user-id="{{ follow_user.id }}">
+                        Following
+                    </button>
+                    {% else %}
+                    <button class="follow-btn" data-user-id="{{ follow_user.id }}">
+                        Follow
+                    </button>
+                    {% endif %}
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            {% if not users %}
+            <div class="no-users">
+                <p>No {{ 'followers' if request.endpoint == 'followers' else 'following' }} yet</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.follow-container {
+    max-width: 600px;
+    margin: 84px auto 0;
+    padding: 0 20px;
+}
+
+.follow-header {
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #dbdbdb;
+    margin-bottom: 20px;
+}
+
+.back-btn {
+    color: #262626;
+    font-size: 18px;
+    margin-right: 15px;
+}
+
+.follow-header h2 {
+    font-weight: 300;
+    font-size: 20px;
+}
+
+.follow-tabs {
+    display: flex;
+    border-bottom: 1px solid #dbdbdb;
+    margin-bottom: 20px;
+}
+
+.follow-tabs .tab {
+    flex: 1;
+    text-align: center;
+    padding: 15px 0;
+    color: #8e8e8e;
+    font-weight: 600;
+    border-bottom: 1px solid transparent;
+}
+
+.follow-tabs .tab.active {
+    color: #262626;
+    border-bottom-color: #262626;
+}
+
+.follow-list {
+    background: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+}
+
+.follow-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border-bottom: 1px solid #efefef;
+}
+
+.follow-item:last-child {
+    border-bottom: none;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-details a {
+    font-weight: 600;
+    color: #262626;
+}
+
+.user-details span {
+    color: #8e8e8e;
+    font-size: 14px;
+    display: block;
+}
+
+.no-users {
+    text-align: center;
+    padding: 40px 0;
+    color: #8e8e8e;
+}
+</style>
+{% endblock %}

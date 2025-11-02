@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-container">
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="{{ url_for('index') }}">InstaClone</a>
+            </div>
+            
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}"><i class="fas fa-home"></i></a>
+                <a href="{{ url_for('explore') }}"><i class="far fa-compass"></i></a>
+                <a href="{{ url_for('search') }}"><i class="far fa-search"></i></a>
+                <a href="{{ url_for('profile', username=user.username) }}">
+                    <img src="{{ url_for('static', filename='images/' + user.profile_pic) }}" alt="Profile" class="nav-profile-pic">
+                </a>
+                <a href="{{ url_for('settings') }}"><i class="far fa-cog"></i></a>
+                <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="notifications-container">
+        <div class="notifications-header">
+            <h2>Notifications</h2>
+            <div class="notification-tabs">
+                <button class="tab active" data-tab="all">All</button>
+                <button class="tab" data-tab="likes">Likes</button>
+                <button class="tab" data-tab="comments">Comments</button>
+                <button class="tab" data-tab="follows">Follows</button>
+            </div>
+        </div>
+        
+        <div class="notifications-list">
+            <!-- Sample notifications - in a real app, these would come from the database -->
+            <div class="notification">
+                <div class="notification-avatar">
+                    <img src="{{ url_for('static', filename='images/default_profile.png') }}" alt="User">
+                </div>
+                <div class="notification-content">
+                    <p><strong>username1</strong> liked your post</p>
+                    <span class="notification-time">2 hours ago</span>
+                </div>
+                <div class="notification-preview">
+                    <img src="{{ url_for('static', filename='images/default_post.jpg') }}" alt="Post preview">
+                </div>
+            </div>
+            
+            <div class="notification">
+                <div class="notification-avatar">
+                    <img src="{{ url_for('static', filename='images/default_profile.png') }}" alt="User">
+                </div>
+                <div class="notification-content">
+                    <p><strong>username2</strong> started following you</p>
+                    <span class="notification-time">5 hours ago</span>
+                </div>
+                <div class="notification-action">
+                    <button class="follow-btn">Follow Back</button>
+                </div>
+            </div>
+            
+            <div class="notification">
+                <div class="notification-avatar">
+                    <img src="{{ url_for('static', filename='images/default_profile.png') }}" alt="User">
+                </div>
+                <div class="notification-content">
+                    <p><strong>username3</strong> commented on your post: "Great photo!"</p>
+                    <span class="notification-time">1 day ago</span>
+                </div>
+                <div class="notification-preview">
+                    <img src="{{ url_for('static', filename='images/default_post.jpg') }}" alt="Post preview">
+                </div>
+            </div>
+            
+            <div class="notification bullying-notification">
+                <div class="notification-avatar">
+                    <img src="{{ url_for('static', filename='images/default_profile.png') }}" alt="User">
+                </div>
+                <div class="notification-content">
+                    <p><strong>System Alert:</strong> Cyberbullying detected in your recent comment</p>
+                    <span class="notification-time">Your reputation score has been decreased</span>
+                </div>
+                <div class="notification-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.notifications-container {
+    max-width: 600px;
+    margin: 84px auto 0;
+    padding: 0 20px;
+}
+
+.notifications-header {
+    border-bottom: 1px solid #dbdbdb;
+    padding: 20px 0;
+    margin-bottom: 20px;
+}
+
+.notifications-header h2 {
+    font-weight: 300;
+    margin-bottom: 15px;
+}
+
+.notification-tabs {
+    display: flex;
+    gap: 20px;
+}
+
+.notification-tabs .tab {
+    background: none;
+    border: none;
+    padding: 5px 0;
+    color: #8e8e8e;
+    font-weight: 600;
+    position: relative;
+}
+
+.notification-tabs .tab.active {
+    color: #262626;
+}
+
+.notification-tabs .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #262626;
+}
+
+.notifications-list {
+    background: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+}
+
+.notification {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #efefef;
+}
+
+.notification:last-child {
+    border-bottom: none;
+}
+
+.notification.bullying-notification {
+    background: #fff3cd;
+    border-left: 3px solid #ffc107;
+}
+
+.notification-avatar img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.notification-content {
+    flex: 1;
+    margin-left: 15px;
+}
+
+.notification-content p {
+    margin-bottom: 5px;
+}
+
+.notification-time {
+    color: #8e8e8e;
+    font-size: 12px;
+}
+
+.notification-preview img {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+}
+
+.notification-action {
+    margin-left: 15px;
+}
+
+.notification-warning {
+    color: #ffc107;
+    font-size: 20px;
+    margin-left: 15px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('.notification-tabs .tab');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // In a real app, you would filter notifications here
+            console.log('Switching to tab:', this.dataset.tab);
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-container">
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="{{ url_for('index') }}">InstaClone</a>
+            </div>
+            
+            <div class="nav-search">
+                <input type="text" placeholder="Search" id="search-input">
+            </div>
+            
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}"><i class="fas fa-home"></i></a>
+                <a href="{{ url_for('explore') }}"><i class="far fa-compass"></i></a>
+                <a href="{{ url_for('search') }}"><i class="far fa-search"></i></a>
+                <a href="{{ url_for('profile', username=user.username) }}">
+                    <img src="{{ url_for('static', filename='images/' + user.profile_pic) }}" alt="Profile" class="nav-profile-pic">
+                </a>
+                <a href="{{ url_for('settings') }}"><i class="far fa-cog"></i></a>
+                <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="feed-container">
+            <!-- Create Post -->
+            <div class="create-post">
+                <form method="POST" action="{{ url_for('upload_post') }}" enctype="multipart/form-data" class="upload-form">
+                    <div class="form-group">
+                        <input type="file" name="image" accept="image/*" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="caption" placeholder="Write a caption..."></textarea>
+                    </div>
+                    <button type="submit" class="post-btn">Share</button>
+                </form>
+            </div>
+
+            <!-- Posts Feed -->
+            {% for post in posts %}
+            <div class="post-card" data-post-id="{{ post.id }}">
+                <div class="post-header">
+                    <div class="post-user">
+                        <img src="{{ url_for('static', filename='images/' + post.author.profile_pic) }}" alt="{{ post.author.username }}">
+                        <a href="{{ url_for('profile', username=post.author.username) }}">{{ post.author.username }}</a>
+                    </div>
+                    <div class="post-options">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                </div>
+                
+                <div class="post-image">
+                    <img src="{{ url_for('static', filename='images/' + post.image) }}" alt="Post image">
+                </div>
+                
+                <div class="post-actions">
+                    <button class="like-btn {% if post.likes|selectattr('user_id', 'equalto', user.id)|list %}liked{% endif %}" 
+                            data-post-id="{{ post.id }}">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="comment-btn" data-post-id="{{ post.id }}">
+                        <i class="far fa-comment"></i>
+                    </button>
+                    <button class="share-btn">
+                        <i class="far fa-paper-plane"></i>
+                    </button>
+                    <button class="save-btn">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+                
+                <div class="post-likes">
+                    <span class="like-count">{{ post.likes|length }} likes</span>
+                </div>
+                
+                <div class="post-caption">
+                    <a href="{{ url_for('profile', username=post.author.username) }}">{{ post.author.username }}</a>
+                    <span>{{ post.caption }}</span>
+                </div>
+                
+                <div class="post-comments">
+                    {% for comment in post.comments %}
+                    <div class="comment {% if comment.bullying_score > 0.4 %}bullying-detected{% endif %}">
+                        <a href="{{ url_for('profile', username=comment.author.username) }}">{{ comment.author.username }}</a>
+                        <span>{{ comment.text }}</span>
+                        {% if comment.bullying_score > 0.4 %}
+                        <span class="bullying-warning">⚠️ Cyberbullying detected</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="post-time">
+                    {{ post.created_at.strftime('%b %d, %Y') }}
+                </div>
+                
+                <div class="add-comment">
+                    <form class="comment-form" data-post-id="{{ post.id }}">
+                        <input type="text" placeholder="Add a comment..." class="comment-input">
+                        <button type="submit" class="comment-submit">Post</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="user-profile">
+                <img src="{{ url_for('static', filename='images/' + user.profile_pic) }}" alt="{{ user.username }}">
+                <div class="user-info">
+                    <a href="{{ url_for('profile', username=user.username) }}">{{ user.username }}</a>
+                    <span>{{ user.full_name }}</span>
+                </div>
+            </div>
+            
+            <div class="suggestions">
+                <div class="suggestions-header">
+                    <span>Suggestions For You</span>
+                    <a href="{{ url_for('explore') }}">See All</a>
+                </div>
+                
+                {% for suggestion in suggestions %}
+                <div class="suggestion">
+                    <img src="{{ url_for('static', filename='images/' + suggestion.profile_pic) }}" alt="{{ suggestion.username }}">
+                    <div class="suggestion-info">
+                        <a href="{{ url_for('profile', username=suggestion.username) }}">{{ suggestion.username }}</a>
+                        <span>Suggested for you</span>
+                    </div>
+                    <button class="follow-btn" data-user-id="{{ suggestion.id }}">Follow</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
