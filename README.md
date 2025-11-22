@@ -19,6 +19,7 @@ If the toxicity level crosses a set threshold, the system **automatically blocks
 | **Backend** | Python • Flask |
 | **Database** | MySQL |
 | **Machine Learning** | NLP • Text Classification • Scikit-learn / Pandas |
+| **DevOps & Deployment** | Docker • Ansible • GitHub Actions |
 
 ---
 
@@ -28,6 +29,17 @@ If the toxicity level crosses a set threshold, the system **automatically blocks
 - 🚫 **Automatic blocking** once threshold is reached  
 - 🧠 **ML-based classifier** trained for high accuracy  
 - 💻 **Simple and interactive** web interface  
+
+---
+
+## 👥 Team Members  
+
+| Name | GitHub |
+|------|--------|
+| Ramya H P | [ramyahp19](https://github.com/ramyahp19) |
+| Yashodha S | [Yashodha-S452003](https://github.com/Yashodha-S452003) |
+| Sangeetha C R | [Sangeetha-cr](https://github.com/Sangeetha-cr) |
+| Swathir | [Swathir123](https://github.com/Swathir123) |
 
 ---
 
