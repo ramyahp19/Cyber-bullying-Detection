@@ -8,14 +8,14 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import nltk
 from nltk.stem import WordNetLemmatizer
-from nltk.corpus import stopwords
-from nltk.corpus import wordnet
+from nltk.corpus import stopwords, wordnet
 from nltk import pos_tag
 from nltk.tokenize import word_tokenize
 import string
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import json
+
 
 # Download NLTK data if not already present
 nltk.download('stopwords', quiet=True)
