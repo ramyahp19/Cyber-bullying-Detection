@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: cyberbullying-detector
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    plan: free
+    autoDeploy: true
+    envVars:
+      FLASK_ENV: production
+      PYTHON_VERSION: 3.9.12
