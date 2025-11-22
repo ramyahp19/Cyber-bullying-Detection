@@ -6,15 +6,12 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
-import nltk
-from nltk.stem import WordNetLemmatizer
-from nltk.corpus import stopwords, wordnet
-from nltk import pos_tag
-from nltk.tokenize import word_tokenize
 import string
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import json
+import re  # for lightweight text preprocessing
+
 
 
 # Download NLTK data if not already present
