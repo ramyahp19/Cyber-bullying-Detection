@@ -37,9 +37,9 @@ If the toxicity level crosses a set threshold, the system **automatically blocks
 | Name | GitHub |
 |------|--------|
 | Ramya H P | [ramyahp19](https://github.com/ramyahp19) |
-| Yashodha S | [Yashodha-S452003](https://github.com/Yashodha-S452003) |
 | Sangeetha C R | [Sangeetha-cr](https://github.com/Sangeetha-cr) |
-| Swathir | [Swathir123](https://github.com/Swathir123) |
+| Swathi R | [Swathir123](https://github.com/Swathir123) |
+| Yashodha S | [Yashodha-S452003](https://github.com/Yashodha-S452003) |
 
 ---
 
